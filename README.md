@@ -27,27 +27,41 @@ sudo apt upgrade -y
 
 echo "📦 Instalando dependências..."
 sudo apt install -y \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release \
+  wget
+
+echo "☕ Instalando Java 21 (OpenJDK)..."
+sudo mkdir -p /etc/apt/keyrings
+wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb $(lsb_release -cs) main" | \
+  sudo tee /etc/apt/sources.list.d/adoptium.list
+
+sudo apt update
+sudo apt install -y temurin-21-jdk
+
+echo "🧪 Verificando Java..."
+java -version
 
 echo "📂 Criando diretório para chave GPG do Docker..."
 sudo install -m 0755 -d /etc/apt/keyrings
 
 echo "🔑 Adicionando chave GPG oficial do Docker..."
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
 echo "🔒 Definindo permissões para a chave GPG..."
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
 echo "📝 Adicionando repositório Docker..."
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-  https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 echo "🔄 Atualizando pacotes após adicionar repositório Docker..."
 sudo apt update
