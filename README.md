@@ -121,4 +121,3 @@ Ubuntu 24.04 LTS
 Docker CE v24+
 Docker Compose v2 (plugin oficial)
 ```
-
