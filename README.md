@@ -23,28 +23,31 @@ Este repositório contém um script simples e confiável para instalar o **Docke
 set -e
 
 echo "🔧 Atualizando pacotes..."
-sudo apt update
-sudo apt upgrade -y
+apt update
+apt upgrade -y
 
 echo "📦 Instalando dependências..."
-sudo apt install -y \
+apt install -y \
 ca-certificates \
 curl \
 gnupg \
 lsb-release \
 wget \
-git \         # <-- Adicionado Git
-maven         # <-- Adicionado Maven
+git \
+maven \
+gnupg2 \
+software-properties-common \
+apt-transport-https
 
 echo "☕ Instalando Java 21 (OpenJDK)..."
-sudo mkdir -p /etc/apt/keyrings
-wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
+mkdir -p /etc/apt/keyrings
+wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
 
 echo "deb [signed-by=/etc/apt/keyrings/adoptium.gpg] https://packages.adoptium.net/artifactory/deb $(lsb_release -cs) main" | \
-sudo tee /etc/apt/sources.list.d/adoptium.list
+tee /etc/apt/sources.list.d/adoptium.list
 
-sudo apt update
-sudo apt install -y temurin-21-jdk
+apt update
+apt install -y temurin-21-jdk
 
 echo "🧪 Verificando Java..."
 java -version
@@ -56,36 +59,35 @@ echo "🧪 Verificando Maven..."
 mvn -version
 
 echo "📂 Criando diretório para chave GPG do Docker..."
-sudo install -m 0755 -d /etc/apt/keyrings
+install -m 0755 -d /etc/apt/keyrings
 
 echo "🔑 Adicionando chave GPG oficial do Docker..."
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
 echo "🔒 Definindo permissões para a chave GPG..."
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
 
 echo "📝 Adicionando repositório Docker..."
 echo \
 "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
 https://download.docker.com/linux/ubuntu \
 $(lsb_release -cs) stable" | \
-sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 echo "🔄 Atualizando pacotes após adicionar repositório Docker..."
-sudo apt update
+apt update
 
 echo "🐳 Instalando Docker Engine e Compose v2..."
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 echo "🧪 Verificando Docker..."
-sudo docker --version
+docker --version
 
 echo "🧪 Verificando Docker Compose v2..."
-sudo docker compose version
+docker compose version
 
 echo "👤 Adicionando usuário atual ao grupo docker..."
-sudo usermod -aG docker $USER
+usermod -aG docker $USER
 
 echo "✅ Instalação concluída com sucesso!"
 echo "⚠️ Saia e entre novamente na sessão para usar o Docker sem sudo."
