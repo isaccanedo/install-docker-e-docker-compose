@@ -111,6 +111,26 @@ systemctl enable docker
 echo "👤 Adicionando usuário ubuntu ao grupo docker..."
 usermod -aG docker ubuntu
 
+# Criar script para aplicar grupo docker na próxima sessão
+echo "🔧 Criando script de configuração pós-boot..."
+cat > /home/ubuntu/apply-docker-group.sh << 'EOF'
+#!/bin/bash
+echo "🐳 Aplicando grupo docker para a sessão atual..."
+newgrp docker << 'DOCKERGRP'
+echo "✅ Grupo docker aplicado! Testando Docker..."
+docker --version
+docker run --rm hello-world
+echo "🎉 Docker está funcionando!"
+exit
+DOCKERGRP
+EOF
+
+chmod +x /home/ubuntu/apply-docker-group.sh
+chown ubuntu:ubuntu /home/ubuntu/apply-docker-group.sh
+
+# Criar alias para facilitar o uso
+echo "alias docker-setup='/home/ubuntu/apply-docker-group.sh'" >> /home/ubuntu/.bashrc
+
 # Configurar variáveis de ambiente Java
 echo "🌍 Configurando variáveis de ambiente Java..."
 echo 'export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64' >> /etc/environment
@@ -125,13 +145,17 @@ chown ubuntu:ubuntu /home/ubuntu/.bashrc
 
 echo "✅ Instalação concluída com sucesso!"
 echo "📝 Log salvo em: /var/log/user-data.log"
-echo "⚠️ O usuário ubuntu precisa fazer logout/login para usar Docker sem sudo."
+echo ""
+echo "🐳 PARA USAR DOCKER IMEDIATAMENTE:"
+echo "   Execute: ./apply-docker-group.sh"
+echo "   Ou use: docker-setup"
+echo ""
+echo "⚠️ ALTERNATIVA: Faça logout/login para usar Docker normalmente"
 echo "🎉 Instância pronta para uso!"
 
 # Criar arquivo de status para indicar conclusão
 touch /tmp/setup-complete
 echo "$(date): Setup completed successfully" > /tmp/setup-complete
-
 ```
 
 ## 📋 Pré-requisitos
