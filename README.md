@@ -33,7 +33,8 @@ curl \
 gnupg \
 lsb-release \
 wget \
-git  # <-- Adicionado Git
+git \         # <-- Adicionado Git
+maven         # <-- Adicionado Maven
 
 echo "☕ Instalando Java 21 (OpenJDK)..."
 sudo mkdir -p /etc/apt/keyrings
@@ -50,6 +51,9 @@ java -version
 
 echo "🧪 Verificando Git..."
 git --version
+
+echo "🧪 Verificando Maven..."
+mvn -version
 
 echo "📂 Criando diretório para chave GPG do Docker..."
 sudo install -m 0755 -d /etc/apt/keyrings
