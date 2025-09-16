@@ -46,6 +46,12 @@ apt install -y temurin-21-jdk
 echo "🧪 Verificando Java..."
 java -version
 
+echo "📦 Instalando Apache Maven..."
+apt install -y maven
+
+echo "🧪 Verificando Maven..."
+mvn -version
+
 echo "📂 Criando diretório para chave GPG do Docker..."
 install -m 0755 -d /etc/apt/keyrings
 
