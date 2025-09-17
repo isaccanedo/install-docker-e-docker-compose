@@ -33,6 +33,12 @@ apt install -y \
   lsb-release \
   wget
 
+echo "🐙 Instalando Git..."
+apt install -y git
+
+echo "🧪 Verificando Git..."
+git --version
+
 echo "☕ Instalando Java 21 (OpenJDK)..."
 mkdir -p /etc/apt/keyrings
 wget -O- https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /etc/apt/keyrings/adoptium.gpg
