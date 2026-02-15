@@ -1,4 +1,4 @@
-# 🚀  Instalação do Docker + Docker Compose + Java 21 em uma instância VM Ubuntu 24.04 no Amazon EC2
+### 🚀  Instalação do Docker + Docker Compose + Java 21 em uma instância VM Ubuntu 24.04 no Amazon EC2
 
 Este repositório contém um script simples e confiável para instalar o **Docker Engine**, **Docker Compose v2**, **Git**, **Maven** e o **Java 21** no Ubuntu 24.04 LTS.
 
